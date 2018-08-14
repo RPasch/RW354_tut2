@@ -26,7 +26,7 @@ import java.util.Scanner;
  */
 public class ReceiverTCP {
     
-    public final static int FILE_SIZE = 60223860;
+    public final static int FILE_SIZE = 2147483647;
    // private static InputStream inFromReceiver;
     private static ObjectInputStream in;
 //    private static Socket tcpClientSocket = null;
