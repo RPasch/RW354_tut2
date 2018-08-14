@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 public class Receiver {
     public static int portN = 8000;
-    static InputStream inFromClient;
+    static InputStream inFromReceiver;
     static DataInputStream in;
     static Socket normalClientSocket = null;
     static ServerSocket normalServerSocket = null;
@@ -33,8 +33,8 @@ public class Receiver {
             
             normalServerSocket = new ServerSocket(portN);
             normalClientSocket = normalServerSocket.accept();
-            inFromClient = normalClientSocket.getInputStream();
-            in = new DataInputStream(inFromClient);
+            inFromReceiver = normalClientSocket.getInputStream();
+            in = new DataInputStream(inFromReceiver);
            
             
             

@@ -14,8 +14,8 @@ public class Sender {
     public static File file = null;
     public static String protocol = "";
     public static Socket socket = null;
-    static OutputStream initOutToServer;
-    static DataOutputStream initOut;
+    static OutputStream outToReceiver;
+    static DataOutputStream out;
     
     public static void main(String[] args) {
         SenderGUI gui = new SenderGUI();
@@ -28,8 +28,8 @@ public class Sender {
     public static void initialConnect() {
         try {
             socket = new Socket(ipAddress, 8000);
-            initOutToServer = socket.getOutputStream();
-            initOut = new DataOutputStream(initOutToServer);
+            outToReceiver = socket.getOutputStream();
+            out = new DataOutputStream(outToReceiver);
             
         } catch (IOException ex) {
             Logger.getLogger(Sender.class.getName()).log(Level.SEVERE, null, ex);
@@ -38,7 +38,7 @@ public class Sender {
     
     public static void sendProtocol() {
         try {
-            initOut.writeUTF(protocol);
+            out.writeUTF(protocol);
             //initOutToServer.close();
             //initOut.close();
             //initialSocket.close();

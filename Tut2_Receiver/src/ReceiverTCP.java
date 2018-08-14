@@ -1,4 +1,5 @@
 
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -25,8 +26,8 @@ import java.util.Scanner;
  */
 public class ReceiverTCP {
     
-    
-   // private static InputStream inFromClient;
+    public final static int FILE_SIZE = 60223860;
+   // private static InputStream inFromReceiver;
     private static ObjectInputStream in;
 //    private static Socket tcpClientSocket = null;
 //    private static ServerSocket tcpServerSocket = null;
@@ -56,26 +57,56 @@ public class ReceiverTCP {
         
         String cwd = System.getProperty("user.dir");
 
-        File file =null; //new File(cwd + "/hello.txt");
+        String filename = Receiver.in.readUTF();
         
-        in = new ObjectInputStream(Receiver.inFromClient);
-
-        File tmp = (File) in.readObject();
-        file = new File(cwd + "/"+tmp.getName());
+        File file = new File(cwd+"/"+filename);
         
-        Scanner sc = new Scanner(tmp);
-        sc.useDelimiter(" ");
-        String tempString= "";
-        while(sc.hasNext()){
+        int bytesRead;
+        int current = 0;
+        FileOutputStream fos = null;
+        BufferedOutputStream bos = null;
+        
+        try {
+            byte[] byteArray = new byte[FILE_SIZE];
+            fos = new FileOutputStream(file);
+            bos = new BufferedOutputStream(fos);
+            bytesRead = Receiver.inFromReceiver.read(byteArray, 0, byteArray.length);
+            current = bytesRead;
+//            do {
+//                bytesRead = Receiver.inFromReceiver.read(byteArray, current, (byteArray.length-current));
+//                System.out.println("doesthisreach1111");
+//                if (bytesRead >= 0) {
+//                    current += bytesRead;
+//                    System.out.println("doesthisreach2222");
+//                }
+//            } while (bytesRead > -1);
             
-            tempString =tempString + sc.next()+" ";
+            bos.write(byteArray, 0, current);
+            System.out.println("filename : " + file.getName());
+            bos.flush();
+            
+        } catch (Exception e) {
+            System.err.println("shit");
         }
-        tempString = tempString.substring(0, tempString.length()-1);
-        byte everything[] = tempString.getBytes();
-        OutputStream outFile = new FileOutputStream(file);
-        outFile.write(everything);
-        outFile.close();
-        System.out.println(file.getName());
+        
+//        in = new ObjectInputStream(Receiver.inFromReceiver);
+//
+//        File tmp = (File) in.readObject();
+//        file = new File(cwd + "/"+tmp.getName());
+//        
+//        Scanner sc = new Scanner(tmp);
+//        sc.useDelimiter(" ");
+//        String tempString= "";
+//        while(sc.hasNext()){
+//            
+//            tempString =tempString + sc.next()+" ";
+//        }
+//        tempString = tempString.substring(0, tempString.length()-1);
+//        byte everything[] = tempString.getBytes();
+//        OutputStream outFile = new FileOutputStream(file);
+//        outFile.write(everything);
+//        outFile.close();
+//        System.out.println(file.getName());
         
 
     }

@@ -1,12 +1,14 @@
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
 public class SenderTCP {
     private static String ipAddress = "";
-    //private static OutputStream OutToReceiver;
-    private static ObjectOutputStream Out;
-    //private static Socket socket = null;
+    //private static ObjectOutputStream Out;
+    static FileInputStream fis = null;
+    static BufferedInputStream bis = null;
     
     public SenderTCP() {
         sendObject();
@@ -17,9 +19,15 @@ public class SenderTCP {
         try {
             //Sender.socket = new Socket(Sender.ipAddress, 8000);
             //OutToReceiver = Sender.socket.getOutputStream();
-            Out = new ObjectOutputStream(Sender.initOutToServer);
-            
-            Out.writeObject(Sender.file);
+            //Out = new ObjectOutputStream(Sender.outToServer);
+            Sender.out.writeUTF(Sender.file.getName());
+            byte[] byteArray = new byte[(int)Sender.file.length()];
+            fis = new FileInputStream(Sender.file);
+            bis = new BufferedInputStream(fis);
+            bis.read(byteArray, 0, byteArray.length);
+            Sender.outToReceiver.write(byteArray, 0, byteArray.length);
+            Sender.outToReceiver.flush();
+            //Out.writeObject(Sender.file);
         } catch (Exception e) {
             System.err.println("could not send via TCP : " + e);
         }
