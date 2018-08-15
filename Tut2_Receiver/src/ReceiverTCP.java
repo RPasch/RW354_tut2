@@ -88,7 +88,7 @@ public class ReceiverTCP {
             bos.flush();
             
         } catch (Exception e) {
-            System.err.println("shit");
+            System.err.println("shit : "+e);
         }
         
 //        in = new ObjectInputStream(Receiver.inFromReceiver);
