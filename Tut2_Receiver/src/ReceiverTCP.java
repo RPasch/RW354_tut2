@@ -26,7 +26,7 @@ import java.util.Scanner;
  */
 public class ReceiverTCP {
     
-    public final static int FILE_SIZE = 2147483647;
+    public static int FILE_SIZE = 0;
    // private static InputStream inFromReceiver;
     private static ObjectInputStream in;
 //    private static Socket tcpClientSocket = null;
@@ -58,10 +58,11 @@ public class ReceiverTCP {
         String cwd = System.getProperty("user.dir");
 
         String filename = Receiver.in.readUTF();
+        FILE_SIZE = Receiver.in.readInt();
         
         File file = new File(cwd+"/"+filename);
         
-        int bytesRead;
+        int bytesRead=0;
         int current = 0;
         FileOutputStream fos = null;
         BufferedOutputStream bos = null;
@@ -70,7 +71,8 @@ public class ReceiverTCP {
             byte[] byteArray = new byte[FILE_SIZE];
             fos = new FileOutputStream(file);
             bos = new BufferedOutputStream(fos);
-            bytesRead = Receiver.inFromReceiver.read(byteArray, 0, byteArray.length);
+            //bytesRead = Receiver.inFromReceiver.read(byteArray, 0, byteArray.length);
+            Receiver.in.readFully(byteArray, 0, byteArray.length);
             current = bytesRead;
 //            do {
 //                bytesRead = Receiver.inFromReceiver.read(byteArray, current, (byteArray.length-current));
@@ -80,8 +82,8 @@ public class ReceiverTCP {
 //                    System.out.println("doesthisreach2222");
 //                }
 //            } while (bytesRead > -1);
-            
-            bos.write(byteArray, 0, current);
+            System.out.println("kkkkkkkkk");
+            bos.write(byteArray, 0, byteArray.length);
             System.out.println("filename : " + file.getName());
             bos.flush();
             

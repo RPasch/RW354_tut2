@@ -21,12 +21,13 @@ public class SenderTCP {
             //OutToReceiver = Sender.socket.getOutputStream();
             //Out = new ObjectOutputStream(Sender.outToServer);
             Sender.out.writeUTF(Sender.file.getName());
+            Sender.out.writeInt((int) Sender.file.length());
             byte[] byteArray = new byte[(int)Sender.file.length()];
             fis = new FileInputStream(Sender.file);
             bis = new BufferedInputStream(fis);
             bis.read(byteArray, 0, byteArray.length);
-            Sender.outToReceiver.write(byteArray, 0, byteArray.length);
-            Sender.outToReceiver.flush();
+            Sender.out.write(byteArray, 0, byteArray.length);
+            Sender.out.flush();
             //Out.writeObject(Sender.file);
         } catch (Exception e) {
             System.err.println("could not send via TCP : " + e);
