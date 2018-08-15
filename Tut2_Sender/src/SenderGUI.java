@@ -68,6 +68,7 @@ public class SenderGUI extends javax.swing.JFrame {
         jScrollPane1.setViewportView(textArea);
 
         fileChooseButton.setText("choose file");
+        fileChooseButton.setEnabled(false);
         fileChooseButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fileChooseButtonActionPerformed(evt);
@@ -200,6 +201,7 @@ public class SenderGUI extends javax.swing.JFrame {
         Sender.ipAddress = ipAddressField.getText();
         Sender.initialConnect();
         SendButton.setEnabled(true);
+        fileChooseButton.setEnabled(true);
     }//GEN-LAST:event_connectButtonActionPerformed
 
     /**
