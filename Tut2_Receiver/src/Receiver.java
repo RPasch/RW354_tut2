@@ -21,13 +21,13 @@ public class Receiver {
         ReceiverGUI gui  = new ReceiverGUI();
         gui.setEnabled(true);
         gui.setVisible(true);
-        getTypOfMsg();
+        getTypeOfMsg();
         
         
         
     }
     
-    public static void getTypOfMsg() throws IOException, ClassNotFoundException{
+    public static void getTypeOfMsg() throws IOException, ClassNotFoundException{
         String code = "";
         try {
             
@@ -58,7 +58,7 @@ public class Receiver {
             //normalServerSocket.close();
         } catch (Exception ex) {
             System.err.println("Closing Initial thingies : " + ex);
-            }
+        }
             
         if(code.equals("TCP")){
             

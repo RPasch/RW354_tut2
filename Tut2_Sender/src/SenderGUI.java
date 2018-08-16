@@ -77,7 +77,7 @@ public class SenderGUI extends javax.swing.JFrame {
 
         fileNameField.setEditable(false);
 
-        ipAddressField.setText("146.232.49.160");
+        ipAddressField.setText("146.232.50.114");
 
         ChooseProtocol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "TCP", "RBUDP" }));
         ChooseProtocol.addActionListener(new java.awt.event.ActionListener() {
@@ -188,7 +188,8 @@ public class SenderGUI extends javax.swing.JFrame {
             if (Sender.protocol.equals("TCP")) {
                 SenderTCP sender = new SenderTCP();
             } else {
-                System.out.println("this is not implemented yet");
+                //System.out.println("this is not implemented yet");
+                SenderRBUDP sender = new SenderRBUDP();
             }
             
             this.setEnabled(false);
