@@ -76,10 +76,15 @@ public class SenderGUI extends javax.swing.JFrame {
         });
 
         fileNameField.setEditable(false);
+        fileNameField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fileNameFieldActionPerformed(evt);
+            }
+        });
 
-        ipAddressField.setText("146.232.50.114");
+        ipAddressField.setText("146.232.49.32");
 
-        ChooseProtocol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "TCP", "RBUDP" }));
+        ChooseProtocol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "RBUDP", "TCP" }));
         ChooseProtocol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ChooseProtocolActionPerformed(evt);
@@ -204,6 +209,10 @@ public class SenderGUI extends javax.swing.JFrame {
         SendButton.setEnabled(true);
         fileChooseButton.setEnabled(true);
     }//GEN-LAST:event_connectButtonActionPerformed
+
+    private void fileNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileNameFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fileNameFieldActionPerformed
 
     /**
      * @param args the command line arguments
