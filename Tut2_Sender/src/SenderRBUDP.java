@@ -52,15 +52,9 @@ public class SenderRBUDP {
 
             breakUpFile();
             
-            //System.out.println("did this work");
             
-            //System.out.println("hahahahahaha");
             Thread.sleep(1000);
             sendPackets();
-//            for (DatagramPacket dp : packetList) {
-//                socket.send(dp);
-//            }
-//            System.out.println("sending finished");
             
         } catch (Exception e) {
             //System.err.println("could not make RBUDP socket : " + e);
@@ -125,7 +119,7 @@ public class SenderRBUDP {
         return result;
     }
     
-    public void sendPackets(){
+    public void sendPackets(){ //make this recursive w/ arguments being packets to send
         
         for (DatagramPacket dp : packetList) {
             try {
@@ -138,6 +132,30 @@ public class SenderRBUDP {
                 Logger.getLogger(SenderRBUDP.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+        //Sender.out.writeUTF("STOP");
+        
+        try {
+            //byte[] temp1 = toBytes(-3);
+            byte[] bb = {-1, -1, -1, -1};
+            //int temp2 = convertByteToInt(temp1);
+            //System.out.println("HHHHHHH : "+temp1[0]+" | "+temp1[1]+" | "+temp1[2]+" | "+temp1[3]);
+            //System.out.println("HHHHHHH : "+temp2);
+
+            //Thread.sleep(2000);
+            //Sender.out.writeUTF("STOP");
+            byte[] tempBuffer = new byte[PACKET_SIZE+4];
+            System.arraycopy(bb, 0, tempBuffer, 0, 4);
+            DatagramPacket tempDP = new DatagramPacket(tempBuffer, tempBuffer.length, address, port);
+            socket.send(tempDP);
+            socket.send(tempDP);
+            socket.send(tempDP);
+            socket.send(tempDP);
+            socket.send(tempDP);
+        } catch (Exception e) {
+            System.err.println("could not say stop : "+e);
+        }
+        
         System.out.println("sending finished");
     }
     

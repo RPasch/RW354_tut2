@@ -16,6 +16,8 @@ public class Sender {
     public static Socket socket = null;
     static OutputStream outToReceiver;
     static DataOutputStream out;
+    static InputStream inFromReceiver;
+    static DataInputStream in;
     
     public static void main(String[] args) {
         SenderGUI gui = new SenderGUI();
@@ -30,6 +32,8 @@ public class Sender {
             socket = new Socket(ipAddress, 8000);
             outToReceiver = socket.getOutputStream();
             out = new DataOutputStream(outToReceiver);
+            inFromReceiver = socket.getInputStream();
+            in = new DataInputStream(inFromReceiver);
             
         } catch (IOException ex) {
             Logger.getLogger(Sender.class.getName()).log(Level.SEVERE, null, ex);
