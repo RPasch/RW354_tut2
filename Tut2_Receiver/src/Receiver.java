@@ -12,10 +12,12 @@ import java.util.logging.Logger;
 
 public class Receiver {
     public static int portN = 8000;
-    static InputStream inFromReceiver;
+    static InputStream inFromSender;
     static DataInputStream in;
     static Socket normalClientSocket = null;
     static ServerSocket normalServerSocket = null;
+    static OutputStream outToSender;
+    static DataOutputStream out;
     
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         ReceiverGUI gui  = new ReceiverGUI();
@@ -33,9 +35,10 @@ public class Receiver {
             
             normalServerSocket = new ServerSocket(portN);
             normalClientSocket = normalServerSocket.accept();
-            inFromReceiver = normalClientSocket.getInputStream();
-            in = new DataInputStream(inFromReceiver);
-           
+            inFromSender = normalClientSocket.getInputStream();
+            in = new DataInputStream(inFromSender);
+            outToSender = normalClientSocket.getOutputStream();
+            out = new DataOutputStream(outToSender);
             
             
         } catch (Exception ex) {

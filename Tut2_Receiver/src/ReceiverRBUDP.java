@@ -18,7 +18,7 @@ public class ReceiverRBUDP {
     public static DatagramPacket packet;
     static public byte[] fileAsBytes;
     static public ArrayList<DatagramPacket> packetlist = new ArrayList<DatagramPacket>();
-    
+    public static boolean stopSending = true;
     
     public ReceiverRBUDP() {
         receiveFile();
@@ -38,6 +38,13 @@ public class ReceiverRBUDP {
 
             t.start();
             
+            while(true){
+                String completeList = Receiver.in.readUTF();
+                if(!completeList.equals("") ){
+                    System.out.println("\n----------\nThe msg is : " + completeList + "\n----------\n");
+                    stopSending = false;
+                }
+            }
             //System.out.println(t.getName());
             //byte[] buffer = new byte[10000];
             //packet = new DatagramPacket(buffer, buffer.length);

@@ -17,7 +17,7 @@ import java.util.Scanner;
 public class ReceiverTCP {
     
     public static int FILE_SIZE = 0;
-   // private static InputStream inFromReceiver;
+   // private static InputStream inFromSender;
     private static ObjectInputStream in;
 //    private static Socket tcpClientSocket = null;
 //    private static ServerSocket tcpServerSocket = null;
@@ -61,11 +61,11 @@ public class ReceiverTCP {
             byte[] byteArray = new byte[FILE_SIZE];
             fos = new FileOutputStream(file);
             bos = new BufferedOutputStream(fos);
-            //bytesRead = Receiver.inFromReceiver.read(byteArray, 0, byteArray.length);
+            //bytesRead = Receiver.inFromSender.read(byteArray, 0, byteArray.length);
             Receiver.in.readFully(byteArray, 0, byteArray.length);
             current = bytesRead;
 //            do {
-//                bytesRead = Receiver.inFromReceiver.read(byteArray, current, (byteArray.length-current));
+//                bytesRead = Receiver.inFromSender.read(byteArray, current, (byteArray.length-current));
 //                System.out.println("doesthisreach1111");
 //                if (bytesRead >= 0) {
 //                    current += bytesRead;
@@ -81,7 +81,7 @@ public class ReceiverTCP {
             System.err.println("shit : "+e);
         }
         
-//        in = new ObjectInputStream(Receiver.inFromReceiver);
+//        in = new ObjectInputStream(Receiver.inFromSender);
 //
 //        File tmp = (File) in.readObject();
 //        file = new File(cwd + "/"+tmp.getName());
