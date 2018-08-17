@@ -23,7 +23,7 @@ public class SenderRBUDP {
     private byte[] fileAsBytes;
     FileInputStream fis;
     int filesize = 0, numpackets;
-    int PACKET_SIZE = 512;
+    int PACKET_SIZE = 1024;
     
     public SenderRBUDP() {
         send();
@@ -55,7 +55,7 @@ public class SenderRBUDP {
             //System.out.println("did this work");
             
             //System.out.println("hahahahahaha");
-            
+            Thread.sleep(1000);
             sendPackets();
 //            for (DatagramPacket dp : packetList) {
 //                socket.send(dp);
