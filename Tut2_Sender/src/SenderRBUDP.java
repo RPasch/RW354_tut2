@@ -61,7 +61,7 @@ public class SenderRBUDP {
             
             byte[] tempBuffer = new byte[PACKET_SIZE + 4];
             BigInteger I = BigInteger.valueOf(i);
-            System.arraycopy(I, 0, tempBuffer, 0, 4);
+            System.arraycopy(I.toByteArray(), 0, tempBuffer, 0, 4);
             System.arraycopy(sendBuffer, 0, tempBuffer, 4, sendBuffer.length);
             
             DatagramPacket tempPacket = new DatagramPacket(tempBuffer, tempBuffer.length, address, port);
@@ -72,7 +72,7 @@ public class SenderRBUDP {
         
         byte[] tempBuffer = new byte[PACKET_SIZE + 4];
         BigInteger I = BigInteger.valueOf(numpackets-1);
-        System.arraycopy(I, 0, tempBuffer, 0, 4);
+        System.arraycopy(I.toByteArray(), 0, tempBuffer, 0, 4);
         System.arraycopy(sendBuffer, 0, tempBuffer, 4, sendBuffer.length);
         
         DatagramPacket tempPacket = new DatagramPacket(tempBuffer, tempBuffer.length, address, port);
