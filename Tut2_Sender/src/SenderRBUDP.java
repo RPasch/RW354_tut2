@@ -58,9 +58,9 @@ public class SenderRBUDP {
         
         for (int i = 0; i < numpackets-1; i++) {
             sendBuffer = Arrays.copyOfRange(fileAsBytes, i*PACKET_SIZE, (i+1)*PACKET_SIZE);
+            
             byte[] tempBuffer = new byte[PACKET_SIZE + 4];
             BigInteger I = BigInteger.valueOf(i);
-            
             System.arraycopy(I, 0, tempBuffer, 0, 4);
             System.arraycopy(sendBuffer, 0, tempBuffer, 4, sendBuffer.length);
             
@@ -69,9 +69,9 @@ public class SenderRBUDP {
         }
         
         sendBuffer = Arrays.copyOfRange(fileAsBytes, numpackets*PACKET_SIZE, filesize);
+        
         byte[] tempBuffer = new byte[PACKET_SIZE + 4];
         BigInteger I = BigInteger.valueOf(numpackets-1);
-            
         System.arraycopy(I, 0, tempBuffer, 0, 4);
         System.arraycopy(sendBuffer, 0, tempBuffer, 4, sendBuffer.length);
         
