@@ -13,7 +13,7 @@ public class ReceiverRBUDP {
     public static String filename ;
     public static int filesize;
     static int port = 7999;
-    public static int packetSize = 5;
+    public static int packetSize = 1024;
     public static DatagramSocket socket = null;
     public static DatagramPacket packet;
     static public byte[] fileAsBytes;

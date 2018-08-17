@@ -19,12 +19,18 @@ public class RBUDP_Thread extends Thread{
     @Override
     public void run(){
          int count = 0;
-
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException ex) {
+//            Logger.getLogger(RBUDP_Thread.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+                byte[] tempBytes ;//=new byte[ReceiverRBUDP.packetSize+4];
+                DatagramPacket temp ;//= new DatagramPacket(tempBytes, tempBytes.length);
         while(true){
             try {
-
-                byte[] tempBytes = new byte[ReceiverRBUDP.packetSize+4];
-                DatagramPacket temp = new DatagramPacket(tempBytes, tempBytes.length);
+                //Thread.sleep(1000);
+                tempBytes = new byte[ReceiverRBUDP.packetSize+4];
+                temp = new DatagramPacket(tempBytes, tempBytes.length);
                 ReceiverRBUDP.socket.receive(temp);
                 ReceiverRBUDP.packetlist.add(temp);
                 byte[] seq = new byte[4];
