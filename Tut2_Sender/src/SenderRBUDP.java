@@ -10,6 +10,7 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -119,7 +120,7 @@ public class SenderRBUDP {
         return result;
     }
     
-    public void sendPackets(){ //make this recursive w/ arguments being packets to send
+    public void sendPackets(/*ArrayList<DatagramPacket> tempPacketList*/) { //make this recursive w/ arguments being packets to send
         
         for (DatagramPacket dp : packetList) {
             try {
@@ -136,14 +137,8 @@ public class SenderRBUDP {
         //Sender.out.writeUTF("STOP");
         
         try {
-            //byte[] temp1 = toBytes(-3);
             byte[] bb = {-1, -1, -1, -1};
-            //int temp2 = convertByteToInt(temp1);
-            //System.out.println("HHHHHHH : "+temp1[0]+" | "+temp1[1]+" | "+temp1[2]+" | "+temp1[3]);
-            //System.out.println("HHHHHHH : "+temp2);
-
-            //Thread.sleep(2000);
-            //Sender.out.writeUTF("STOP");
+            
             byte[] tempBuffer = new byte[PACKET_SIZE+4];
             System.arraycopy(bb, 0, tempBuffer, 0, 4);
             DatagramPacket tempDP = new DatagramPacket(tempBuffer, tempBuffer.length, address, port);
@@ -156,16 +151,50 @@ public class SenderRBUDP {
             System.err.println("could not say stop : "+e);
         }
         
+        try {
+            String receivedPacketNums = Sender.in.readUTF();    
+            System.out.println("THESE WERE RECEIVED : "+receivedPacketNums);
+            
+            removeFromPacketList(receivedPacketNums);
+            if (packetList.size() == 0) {
+                System.out.println("ALL PACKETS RECEIVED");
+                
+            } else {
+                sendPackets();
+            }
+            
+        } catch (Exception e) {
+            System.err.println("could not get list of missing packets : "+e);
+        }
+        
         System.out.println("sending finished");
     }
     
     public int convertByteToInt(byte[] b) {
-//        int value = 0;
-//        for (int i = 0; i < b.length; i++) {
-//            value = (value << 8) | b[i];
-//        }
-//        return value;
         return ByteBuffer.wrap(b).getInt();
+    }
+    
+    public void removeFromPacketList(String list){
+        Scanner sc = new Scanner(list);
+        sc.useDelimiter(",");
+        
+        
+        while (sc.hasNext()) {
+            int item = Integer.parseInt(sc.next());
+            
+            for (int i = packetList.size() - 1; i >= 0; i--) {
+                byte[] seqBytes = new byte[4];
+                seqBytes[0] = packetList.get(i).getData()[0];
+                seqBytes[1] = packetList.get(i).getData()[1];
+                seqBytes[2] = packetList.get(i).getData()[2];
+                seqBytes[3] = packetList.get(i).getData()[3];
+                
+                int seqInt = convertByteToInt(seqBytes);
+                if (seqInt == item) {
+                    packetList.remove(i);
+                }
+            }
+        }
     }
     
 }
