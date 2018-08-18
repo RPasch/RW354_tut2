@@ -1,6 +1,0 @@
-eax, ecx, edx - expendible registers
-ebx           - make sure that whatever is in ebx before you start is what
-                is in ebx
-                after you end the function
-cmp           - at least one argument has to be a register
-
