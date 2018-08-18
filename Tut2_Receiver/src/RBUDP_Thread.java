@@ -21,7 +21,7 @@ public class RBUDP_Thread extends Thread {
         //public static ArrayList<Integer> missingElements = new ArrayList<>();
 
     public static int num_of_packets;
-
+    public static boolean exitBool = true;
     //public static ArrayList<Integer> receivedElements = new ArrayList<>();
     //public static String receivedStringList = "";
     public RBUDP_Thread() {
@@ -40,8 +40,15 @@ public class RBUDP_Thread extends Thread {
         fillarrayList(num_of_packets);
 
         listenAndSend(tempBytes, temp);
-
-        System.out.println("\n----------\n I HAD TO STOP SENDING  \n-----------\n");
+         
+        if (missingElements.isEmpty()) {
+                    System.out.println("ALL PACKETS WERE RECEIVED");
+                    orderBytes();
+                    createFile();
+                    //break; 
+        }
+        
+        System.out.println("\n zzzzzzzzzzzzzzzz \n I HAD TO STOP SENDING  ");
 
     }
 
@@ -87,7 +94,6 @@ public class RBUDP_Thread extends Thread {
     public static void listenAndSend(byte[] tempBytes, DatagramPacket temp) {
         String receivedStringList = "";
         ArrayList<Integer> receivedElements = new ArrayList<>();
-        System.out.println("\n ---------------------\n\n ---------------------\n\n ---------------------\n\n ---------------------\n");
         while (true) {
             try {
                 //byte[] checkList = 
@@ -102,8 +108,13 @@ public class RBUDP_Thread extends Thread {
                 if (seqI == -1) {
                     System.out.println("MINUS ONE HAS BEEN RECEIVED");
                     Receiver.out.writeUTF(receivedStringList);
+                    if(missingElements.size() == 0){
+                        break;
+                    }else{
                     listenAndSend(tempBytes, temp);
-                    
+                    //exitBool = false;
+                    break;
+                    }
                 }
                 receivedElements.add(seqI);
                 receivedStringList = listToString(receivedElements);
@@ -112,11 +123,7 @@ public class RBUDP_Thread extends Thread {
                 ReceiverRBUDP.packetlist.add(temp);
                 System.err.println(seqI);
 
-                if (missingElements.isEmpty()) {
-                    System.out.println("ALL PACKETS WERE RECEIVED");
-                    orderBytes();
-                    createFile();
-                }
+                
 
 
             } catch (Exception ex) {
@@ -131,7 +138,7 @@ public class RBUDP_Thread extends Thread {
 
     public static void orderBytes(){
         num_of_packets = (ReceiverRBUDP.filesize / ReceiverRBUDP.packetSize) + 1;
-        byte[] tempCompleteArray = new byte[num_of_packets*ReceiverRBUDP.filesize];
+        byte[] tempCompleteArray = new byte[num_of_packets*ReceiverRBUDP.packetSize];
         byte[][] orderedArray = new byte[num_of_packets][ReceiverRBUDP.packetSize];
         completeFinalArray = new byte[ReceiverRBUDP.filesize];
         for (int i = 0; i < ReceiverRBUDP.packetlist.size(); i++) {
