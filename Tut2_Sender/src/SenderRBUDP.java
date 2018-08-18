@@ -1,3 +1,4 @@
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SenderRBUDP {
+
     private final int port = 7999;
     private InetAddress address;
     private DatagramSocket socket = null;
@@ -24,22 +26,22 @@ public class SenderRBUDP {
     private byte[] fileAsBytes;
     FileInputStream fis;
     int filesize = 0, numpackets;
-    int PACKET_SIZE = 1024;
-    
+    int PACKET_SIZE = 4000;
+
     public SenderRBUDP() {
         send();
     }
-    
+
     public void send() {
         try {
             filesize = (int) Sender.file.length();
-            numpackets = (filesize/PACKET_SIZE)+1;
-            
+            numpackets = (filesize / PACKET_SIZE) + 1;
+
             //sendBuffer = "Hello, World!".getBytes();
             fileAsBytes = new byte[filesize];
             fis = new FileInputStream(Sender.file);
             fis.read(fileAsBytes);
-            
+
             address = InetAddress.getByName(Sender.ipAddress);
             socket = new DatagramSocket();
             //packet = new DatagramPacket(sendBuffer, sendBuffer.length, address, port);
@@ -52,63 +54,51 @@ public class SenderRBUDP {
             Sender.out.writeInt((int) Sender.file.length());
 
             breakUpFile();
-            
-            
+
             Thread.sleep(1000);
             sendPackets();
-            
+
         } catch (Exception e) {
             //System.err.println("could not make RBUDP socket : " + e);
             Logger.getLogger(SenderRBUDP.class.getName()).log(Level.SEVERE, null, e);
         }
-        
+
     }
-    
-    public void breakUpFile () {
+
+    public void breakUpFile() {
         sendBuffer = new byte[PACKET_SIZE];
-        
-        System.out.println("numpackets : "+numpackets);
-        
-        for (int i = 0; i < numpackets-1; i++) {
+
+        System.out.println("numpackets : " + numpackets);
+
+        for (int i = 0; i < numpackets - 1; i++) {
             //System.out.println("ITERATION : " + i+" ");
-            sendBuffer = Arrays.copyOfRange(fileAsBytes, i*PACKET_SIZE, (i+1)*PACKET_SIZE);
-            //System.out.println("a");
+            sendBuffer = Arrays.copyOfRange(fileAsBytes, i * PACKET_SIZE, (i + 1) * PACKET_SIZE);
             byte[] tempBuffer = new byte[PACKET_SIZE + 4];
-            //System.out.println("b");
-            //BigInteger I = BigInteger.valueOf(i);
-            //System.out.println("c : "+ I.toByteArray());
-            //System.out.println("cc : "+(byte)2);
             byte[] sequence = toBytes(i);
             System.arraycopy(sequence, 0, tempBuffer, 0, 4);
-            //System.out.println("d");
             System.arraycopy(sendBuffer, 0, tempBuffer, 4, sendBuffer.length);
-            //System.out.println("e");
-            
+
             DatagramPacket tempPacket = new DatagramPacket(tempBuffer, tempBuffer.length, address, port);
             //DatagramPacket tempPacket = new DatagramPacket(sendBuffer, sendBuffer.length, address, port);
-            //System.out.println("f");
             packetList.add(tempPacket);
-            //System.out.println("g");
         }
-        
+
         //System.out.println("bjkhbjbhjbh");
-        
-        sendBuffer = Arrays.copyOfRange(fileAsBytes, (numpackets-1)*PACKET_SIZE, filesize);
-        
+        sendBuffer = Arrays.copyOfRange(fileAsBytes, (numpackets - 1) * PACKET_SIZE, filesize);
+
         //System.out.println("herro");
-        
         byte[] tempBuffer = new byte[PACKET_SIZE + 4];
         //BigInteger I = BigInteger.valueOf(numpackets-1);
-        byte[] sequence = toBytes(numpackets-1);//I.toByteArray();
+        byte[] sequence = toBytes(numpackets - 1);//I.toByteArray();
         System.arraycopy(sequence, 0, tempBuffer, 0, 4);
         System.arraycopy(sendBuffer, 0, tempBuffer, 4, sendBuffer.length);
-        
+
         DatagramPacket tempPacket = new DatagramPacket(tempBuffer, tempBuffer.length, address, port);
         //DatagramPacket tempPacket = new DatagramPacket(sendBuffer, sendBuffer.length, address, port);
         packetList.add(tempPacket);
-        
+
     }
-    
+
     byte[] toBytes(int i) {
         byte[] result = new byte[4];
 
@@ -119,27 +109,25 @@ public class SenderRBUDP {
 
         return result;
     }
-    
+
     public void sendPackets(/*ArrayList<DatagramPacket> tempPacketList*/) { //make this recursive w/ arguments being packets to send
-        
+
         for (DatagramPacket dp : packetList) {
             try {
                 socket.send(dp);
                 byte[] seq = new byte[4];
                 System.arraycopy(dp.getData(), 0, seq, 0, 4);
                 int seqInt = convertByteToInt(seq);
-                System.err.println("AT : "+seqInt);
+                System.err.println("AT : " + seqInt);
             } catch (IOException ex) {
                 Logger.getLogger(SenderRBUDP.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        //Sender.out.writeUTF("STOP");
-        
+
         try {
             byte[] bb = {-1, -1, -1, -1};
-            
-            byte[] tempBuffer = new byte[PACKET_SIZE+4];
+
+            byte[] tempBuffer = new byte[PACKET_SIZE + 4];
             System.arraycopy(bb, 0, tempBuffer, 0, 4);
             DatagramPacket tempDP = new DatagramPacket(tempBuffer, tempBuffer.length, address, port);
             socket.send(tempDP);
@@ -148,47 +136,46 @@ public class SenderRBUDP {
             socket.send(tempDP);
             socket.send(tempDP);
         } catch (Exception e) {
-            System.err.println("could not say stop : "+e);
+            System.err.println("could not say stop : " + e);
         }
-        
+
         try {
-            String receivedPacketNums = Sender.in.readUTF();    
-            System.out.println("THESE WERE RECEIVED : "+receivedPacketNums);
-            
+            String receivedPacketNums = Sender.in.readUTF();
+            System.out.println("THESE WERE RECEIVED : " + receivedPacketNums);
+
             removeFromPacketList(receivedPacketNums);
             if (packetList.size() == 0) {
                 System.out.println("ALL PACKETS RECEIVED");
-                
+
             } else {
                 sendPackets();
             }
-            
+
         } catch (Exception e) {
-            System.err.println("could not get list of missing packets : "+e);
+            System.err.println("could not get list of missing packets : " + e);
         }
-        
+
         System.out.println("sending finished");
     }
-    
+
     public int convertByteToInt(byte[] b) {
         return ByteBuffer.wrap(b).getInt();
     }
-    
-    public void removeFromPacketList(String list){
+
+    public void removeFromPacketList(String list) {
         Scanner sc = new Scanner(list);
         sc.useDelimiter(",");
-        
-        
+
         while (sc.hasNext()) {
             int item = Integer.parseInt(sc.next());
-            
+
             for (int i = packetList.size() - 1; i >= 0; i--) {
                 byte[] seqBytes = new byte[4];
                 seqBytes[0] = packetList.get(i).getData()[0];
                 seqBytes[1] = packetList.get(i).getData()[1];
                 seqBytes[2] = packetList.get(i).getData()[2];
                 seqBytes[3] = packetList.get(i).getData()[3];
-                
+
                 int seqInt = convertByteToInt(seqBytes);
                 if (seqInt == item) {
                     packetList.remove(i);
@@ -196,5 +183,5 @@ public class SenderRBUDP {
             }
         }
     }
-    
+
 }
