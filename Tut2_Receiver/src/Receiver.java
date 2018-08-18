@@ -38,7 +38,7 @@ public class Receiver {
             inFromSender = normalClientSocket.getInputStream();
             in = new DataInputStream(inFromSender);
             outToSender = normalClientSocket.getOutputStream();
-            out = new DataOutputStream(outToSender);
+            out = new DataOutputStream(outToSender);    
             
             
         } catch (Exception ex) {
