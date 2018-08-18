@@ -26,7 +26,7 @@ public class SenderRBUDP {
     private byte[] fileAsBytes;
     FileInputStream fis;
     int filesize = 0, numpackets;
-    int PACKET_SIZE = 4000;
+    int PACKET_SIZE = 16384;
 
     public SenderRBUDP() {
         send();
@@ -36,7 +36,7 @@ public class SenderRBUDP {
         try {
             filesize = (int) Sender.file.length();
             numpackets = (filesize / PACKET_SIZE) + 1;
-
+            
             //sendBuffer = "Hello, World!".getBytes();
             fileAsBytes = new byte[filesize];
             fis = new FileInputStream(Sender.file);
@@ -55,7 +55,7 @@ public class SenderRBUDP {
 
             breakUpFile();
 
-            Thread.sleep(1000);
+            Thread.sleep(100);
             sendPackets();
 
         } catch (Exception e) {
@@ -72,7 +72,8 @@ public class SenderRBUDP {
 
         for (int i = 0; i < numpackets - 1; i++) {
             //System.out.println("ITERATION : " + i+" ");
-            sendBuffer = Arrays.copyOfRange(fileAsBytes, i * PACKET_SIZE, (i + 1) * PACKET_SIZE);
+            //sendBuffer = Arrays.copyOfRange(fileAsBytes, i * PACKET_SIZE, (i + 1) * PACKET_SIZE);
+            System.arraycopy(fileAsBytes, i * PACKET_SIZE, sendBuffer, 0, PACKET_SIZE);
             byte[] tempBuffer = new byte[PACKET_SIZE + 4];
             byte[] sequence = toBytes(i);
             System.arraycopy(sequence, 0, tempBuffer, 0, 4);
@@ -118,38 +119,39 @@ public class SenderRBUDP {
                 byte[] seq = new byte[4];
                 System.arraycopy(dp.getData(), 0, seq, 0, 4);
                 int seqInt = convertByteToInt(seq);
-                System.err.println("AT : " + seqInt);
+                System.out.println("AT : " + seqInt);
             } catch (IOException ex) {
                 Logger.getLogger(SenderRBUDP.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
-        try {
-            byte[] bb = {-1, -1, -1, -1};
-
-            byte[] tempBuffer = new byte[PACKET_SIZE + 4];
-            System.arraycopy(bb, 0, tempBuffer, 0, 4);
-            DatagramPacket tempDP = new DatagramPacket(tempBuffer, tempBuffer.length, address, port);
-            
-            for (int i = 0; i < 100; i++) {
-                socket.send(tempDP);
-            }
-            
-        } catch (Exception e) {
-            System.err.println("could not say stop : " + e);
-        }
+//        try {
+//            byte[] bb = {-1, -1, -1, -1};
+//
+//            byte[] tempBuffer = new byte[PACKET_SIZE + 4];
+//            System.arraycopy(bb, 0, tempBuffer, 0, 4);
+//            DatagramPacket tempDP = new DatagramPacket(tempBuffer, tempBuffer.length, address, port);
+//            
+//            for (int i = 0; i < 100; i++) {
+//                socket.send(tempDP);
+//            }
+//            
+//        } catch (Exception e) {
+//            System.err.println("could not say stop : " + e);
+//        }
 
         try {
             String receivedPacketNums = Sender.in.readUTF();
             System.out.println("THESE WERE RECEIVED : " + receivedPacketNums);
 
             removeFromPacketList(receivedPacketNums);
-            if (packetList.size() == 0) {
-                System.out.println("ALL PACKETS RECEIVED");
-
-            } else {
+            if (packetList.size() > 0) {
                 System.out.println("THIS IS PACKET SIZE : "+packetList.size());
                 sendPackets();
+
+            } else {
+                System.out.println("ALL PACKETS RECEIVED");
+                
             }
 
         } catch (Exception e) {
