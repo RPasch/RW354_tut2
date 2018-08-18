@@ -82,7 +82,7 @@ public class SenderGUI extends javax.swing.JFrame {
             }
         });
 
-        ipAddressField.setText("146.232.49.32");
+        ipAddressField.setText("146.232.49.175");
 
         ChooseProtocol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "RBUDP", "TCP" }));
         ChooseProtocol.addActionListener(new java.awt.event.ActionListener() {

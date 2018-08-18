@@ -130,11 +130,11 @@ public class SenderRBUDP {
             byte[] tempBuffer = new byte[PACKET_SIZE + 4];
             System.arraycopy(bb, 0, tempBuffer, 0, 4);
             DatagramPacket tempDP = new DatagramPacket(tempBuffer, tempBuffer.length, address, port);
-            socket.send(tempDP);
-            socket.send(tempDP);
-            socket.send(tempDP);
-            socket.send(tempDP);
-            socket.send(tempDP);
+            
+            for (int i = 0; i < 100; i++) {
+                socket.send(tempDP);
+            }
+            
         } catch (Exception e) {
             System.err.println("could not say stop : " + e);
         }
@@ -148,6 +148,7 @@ public class SenderRBUDP {
                 System.out.println("ALL PACKETS RECEIVED");
 
             } else {
+                System.out.println("THIS IS PACKET SIZE : "+packetList.size());
                 sendPackets();
             }
 
@@ -155,7 +156,7 @@ public class SenderRBUDP {
             System.err.println("could not get list of missing packets : " + e);
         }
 
-        System.out.println("sending finished");
+        //System.out.println("sending finished");
     }
 
     public int convertByteToInt(byte[] b) {
