@@ -13,13 +13,14 @@ public class ReceiverRBUDP {
     public static String filename ;
     public static int filesize;
     static int port = 7999;
-    public static int packetSize =4000;
+    public static int packetSize =16384;
     public static DatagramSocket socket = null;
     public static DatagramPacket packet;
     static public byte[] fileAsBytes;
     static public ArrayList<DatagramPacket> packetlist = new ArrayList<DatagramPacket>();
     public static boolean stopSending = true;
-    
+    public static int missingSize = 1;
+    public static int numberOfPackets = 0;
     public ReceiverRBUDP() {
         receiveFile();
     }
@@ -27,6 +28,8 @@ public class ReceiverRBUDP {
     public static void receiveFile(){
         
         setName_Size();
+        ReceiverGUI.updateTextArea("Receiving " + filename);
+
         String cwd = System.getProperty("user.dir");
         File file = new File(cwd+"/"+filename);
         fileAsBytes = new byte[filesize];
@@ -38,13 +41,9 @@ public class ReceiverRBUDP {
 
             t.start();
             
-            while(true){
-                String completeList = Receiver.in.readUTF();
-                if(!completeList.equals("") ){
-                    System.out.println("\n----------\nThe msg is : " + completeList + "\n----------\n");
-                    stopSending = false;
-                }
-            }
+            Receiver.gui.updateProgressBar();
+            
+            
             //System.out.println(t.getName());
             //byte[] buffer = new byte[10000];
             //packet = new DatagramPacket(buffer, buffer.length);

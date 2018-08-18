@@ -18,9 +18,9 @@ public class Receiver {
     static ServerSocket normalServerSocket = null;
     static OutputStream outToSender;
     static DataOutputStream out;
-    
+    public static ReceiverGUI gui ;
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        ReceiverGUI gui  = new ReceiverGUI();
+        gui  = new ReceiverGUI();
         gui.setEnabled(true);
         gui.setVisible(true);
         getTypeOfMsg();
@@ -64,9 +64,11 @@ public class Receiver {
         }
             
         if(code.equals("TCP")){
-            
+            ReceiverGUI.updateTextArea("TCP chosen");
             CallTCP();
         } else if(code.equals("RBUDP")){
+            ReceiverGUI.updateTextArea("RBUDP chosen");
+
             CallRBUDP();
         }
         

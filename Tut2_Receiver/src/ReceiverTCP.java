@@ -48,6 +48,7 @@ public class ReceiverTCP {
         String cwd = System.getProperty("user.dir");
 
         String filename = Receiver.in.readUTF();
+        ReceiverGUI.updateTextArea("Receiving " + filename);
         FILE_SIZE = Receiver.in.readInt();
         
         File file = new File(cwd+"/"+filename);
@@ -74,6 +75,8 @@ public class ReceiverTCP {
 //            } while (bytesRead > -1);
             System.out.println("kkkkkkkkk");
             bos.write(byteArray, 0, byteArray.length);
+            ReceiverGUI.updateTextArea("Transfer Complete");
+
             System.out.println("filename : " + file.getName());
             bos.flush();
             

@@ -1,4 +1,9 @@
+
+import java.awt.TextArea;
+import javax.swing.JProgressBar;
+
 public class ReceiverGUI extends javax.swing.JFrame {
+    public static double progress;
     
     public ReceiverGUI() {
         initComponents();
@@ -15,7 +20,7 @@ public class ReceiverGUI extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
-        progressBar = new javax.swing.JProgressBar();
+        progressBar = new javax.swing.JProgressBar(0,100);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -24,18 +29,22 @@ public class ReceiverGUI extends javax.swing.JFrame {
         textArea.setRows(5);
         jScrollPane1.setViewportView(textArea);
 
+        progressBar.setToolTipText("");
+        progressBar.setOpaque(false);
+        progressBar.setStringPainted(true);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(61, 61, 61)
+                .addGap(54, 54, 54)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -53,7 +62,7 @@ public class ReceiverGUI extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -81,13 +90,43 @@ public class ReceiverGUI extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new ReceiverGUI().setVisible(true);
+               
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JProgressBar progressBar;
-    private javax.swing.JTextArea textArea;
+    public static javax.swing.JProgressBar progressBar;
+    public static javax.swing.JTextArea textArea;
     // End of variables declaration//GEN-END:variables
+
+   
+
+    public void updateProgressBar() throws InterruptedException {
+        boolean x = true;
+        progressBar.setBorderPainted(true);
+        progressBar.setStringPainted(true);
+        progressBar.setVisible(true);
+        int prog ;
+        while(x){
+            Thread.sleep(20);
+            prog = (int)((100)*RBUDP_Thread.getProgress());
+            System.out.println("PROG                : " +prog);
+
+            progressBar.setValue(prog);
+            if(prog == 100){ 
+                x = false;
+                updateTextArea("Transfer Complete! ");
+            }
+        }
+    
+    }
+    public static void updateTextArea(String s){
+        textArea.append("\n " + s);
+    }
+        
+
+
+
 }
