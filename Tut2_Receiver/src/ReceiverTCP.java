@@ -13,96 +13,97 @@ import static java.lang.System.out;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ReceiverTCP {
     
-    public static int FILE_SIZE = 0;
-   // private static InputStream inFromSender;
-    private static ObjectInputStream in;
-//    private static Socket tcpClientSocket = null;
-//    private static ServerSocket tcpServerSocket = null;
-    
+    private static int FILE_SIZE = 0;
+    private static int numFileParts = 0;
     public static File f = null;
+    
     
     public ReceiverTCP() throws IOException, ClassNotFoundException{
         receiveObj();
-    
     }
     
-//    @Override
-//    public void run(){
-//    
+    private static void receiveObj() throws IOException, ClassNotFoundException{
+        String cwd = System.getProperty("user.dir");
+        
+
+        String filename = Receiver.in.readUTF();
+        ReceiverGUI.updateTextArea("Receiving " + filename);
+        
+        FILE_SIZE = Receiver.in.readInt();
+        numFileParts = Receiver.in.readInt();
+        
+        File file = new File(cwd+"/"+filename);
+        
+        System.out.println(filename + " | " + FILE_SIZE + " | " + numFileParts + " | " + Receiver.filePartSize);
+//        int bytesRead=0;
+//        int current = 0;
+//        FileOutputStream fos = null;
+//        BufferedOutputStream bos = null;
+        
+        try {
+            int tempCount = FILE_SIZE;
+            //int bytesRead=0;
+            //int current = 0;
+            FileOutputStream fos = new FileOutputStream(file);
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            
+            System.out.println("|||"+tempCount+"|||");
+            for (int i = 0; i < numFileParts - 1; i++) {
+                System.out.println("----------"+i+"-----------");
+                //System.out.println("a");
+                byte[] byteArray = new byte[Receiver.filePartSize];
+                //System.out.println("b");
+                Receiver.in.readFully(byteArray, 0, byteArray.length);
+                //System.out.println("c");
+                bos.write(byteArray, 0, byteArray.length);
+                //System.out.println("d");
+                tempCount -= Receiver.filePartSize;
+                //System.out.println("e");
+                System.out.println("||"+tempCount+"||");
+            }
+            
+            
+            
+            System.out.println("tempcount : " + tempCount);
+            
+            byte[] byteArray = new byte[tempCount];
+            Receiver.in.readFully(byteArray, 0, byteArray.length);
+            bos.write(byteArray, 0, byteArray.length);
+            
+            //byte[] byteArray = new byte[FILE_SIZE];
+            
+            //Receiver.in.readFully(byteArray, 0, byteArray.length);
+            //current = bytesRead;
+
+            //bos.write(byteArray, 0, byteArray.length);
+            
+            //System.out.println("filename : " + file.getName());
+            bos.flush();
+            //bos.close();
+            
+            
+        } catch (Exception e) {
+            //System.err.println("shit : "+e);
+            Logger.getLogger(ReceiverRBUDP.class.getName()).log(Level.SEVERE, null, e);
+        }
+
+        ReceiverGUI.updateTextArea("Transfer Complete");
+        
+    }
+    
+//    private static receive() {
 //        
-//    
 //    }
     
     
     
     
-    private static void receiveObj() throws IOException, ClassNotFoundException{
-       // tcpServerSocket = new ServerSocket(Receiver.portN);
-        //tcpClientSocket = tcpServerSocket.accept();
-        //inFromClient = Receiver.normalClientSocket.getInputStream();
-       
-        
-        String cwd = System.getProperty("user.dir");
-
-        String filename = Receiver.in.readUTF();
-        ReceiverGUI.updateTextArea("Receiving " + filename);
-        FILE_SIZE = Receiver.in.readInt();
-        
-        File file = new File(cwd+"/"+filename);
-        
-        int bytesRead=0;
-        int current = 0;
-        FileOutputStream fos = null;
-        BufferedOutputStream bos = null;
-        
-        try {
-            byte[] byteArray = new byte[FILE_SIZE];
-            fos = new FileOutputStream(file);
-            bos = new BufferedOutputStream(fos);
-            //bytesRead = Receiver.inFromSender.read(byteArray, 0, byteArray.length);
-            Receiver.in.readFully(byteArray, 0, byteArray.length);
-            current = bytesRead;
-//            do {
-//                bytesRead = Receiver.inFromSender.read(byteArray, current, (byteArray.length-current));
-//                System.out.println("doesthisreach1111");
-//                if (bytesRead >= 0) {
-//                    current += bytesRead;
-//                    System.out.println("doesthisreach2222");
-//                }
-//            } while (bytesRead > -1);
-            System.out.println("kkkkkkkkk");
-            bos.write(byteArray, 0, byteArray.length);
-            ReceiverGUI.updateTextArea("Transfer Complete");
-
-            System.out.println("filename : " + file.getName());
-            bos.flush();
-            
-        } catch (Exception e) {
-            System.err.println("shit : "+e);
-        }
-        
-//        in = new ObjectInputStream(Receiver.inFromSender);
-//
-//        File tmp = (File) in.readObject();
-//        file = new File(cwd + "/"+tmp.getName());
-//        
-//        Scanner sc = new Scanner(tmp);
-//        sc.useDelimiter(" ");
-//        String tempString= "";
-//        while(sc.hasNext()){
-//            
-//            tempString =tempString + sc.next()+" ";
-//        }
-//        tempString = tempString.substring(0, tempString.length()-1);
-//        byte everything[] = tempString.getBytes();
-//        OutputStream outFile = new FileOutputStream(file);
-//        outFile.write(everything);
-//        outFile.close();
-//        System.out.println(file.getName());
-        
-
-    }
+    
+    
+    
 }

@@ -34,18 +34,18 @@ public class SenderRBUDP {
 
     public void send() {
         try {
-            filesize = (int) Sender.file.length();
+//            filesize = (int) Sender.file.length();
             numpackets = (filesize / PACKET_SIZE) + 1;
             
             fileAsBytes = new byte[filesize];
-            fis = new FileInputStream(Sender.file);
+//            fis = new FileInputStream(Sender.file);
             fis.read(fileAsBytes);
 
             address = InetAddress.getByName(Sender.ipAddress);
             socket = new DatagramSocket();
             
-            Sender.out.writeUTF(Sender.file.getName());
-            Sender.out.writeInt((int) Sender.file.length());
+//            Sender.out.writeUTF(Sender.file.getName());
+//            Sender.out.writeInt((int) Sender.file.length());
 
             breakUpFile();
 

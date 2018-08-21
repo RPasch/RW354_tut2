@@ -16,6 +16,8 @@ public class Sender {
     public static RandomAccessFile raf = null;
     public static String filename = "";
     public static int filelength = 0;
+    public static int numFileParts;
+    public static int filePartSize = 4096;
     //
     public static String protocol = "";
     public static Socket socket = null;

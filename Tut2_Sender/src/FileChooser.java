@@ -12,7 +12,9 @@ public class FileChooser {
             //Sender.file = chooser.getSelectedFile();
             Sender.filename = chooser.getSelectedFile().getName();
             Sender.raf = new RandomAccessFile(chooser.getSelectedFile(), "r");
-            Sender.filelength = (int) Sender.raf.length();
+            Sender.filelength = (int) Math.ceil(Sender.raf.length());
+            Sender.numFileParts = (int) Math.round(Sender.filelength/Sender.filePartSize);
+            System.out.println(Sender.filelength + " / " + Sender.filePartSize + " = " + Sender.numFileParts);
             //
         } else {
             JOptionPane.showMessageDialog(chooser, "No valid file selected");

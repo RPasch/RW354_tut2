@@ -12,6 +12,8 @@ import java.util.logging.Logger;
 
 public class Receiver {
     public static int portN = 8000;
+    public static int filePartSize = 4096;
+    
     static InputStream inFromSender;
     static DataInputStream in;
     static Socket normalClientSocket = null;
@@ -19,6 +21,7 @@ public class Receiver {
     static OutputStream outToSender;
     static DataOutputStream out;
     public static ReceiverGUI gui ;
+   
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         gui  = new ReceiverGUI();
         gui.setEnabled(true);
