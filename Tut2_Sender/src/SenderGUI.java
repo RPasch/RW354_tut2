@@ -170,8 +170,8 @@ public class SenderGUI extends javax.swing.JFrame {
         
         try {
             chooser.filePick();
-            fileNameField.setText(Sender.file.getName());
-            textArea.append(Sender.file.getName() + " is chosen\n");
+            fileNameField.setText(Sender.filename);
+            textArea.append(Sender.filename + " is chosen\n");
         } catch (Exception e) {
             System.err.println("could not choose file");
             textArea.append("no file chosen\n");
@@ -185,7 +185,7 @@ public class SenderGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_ChooseProtocolActionPerformed
 
     private void SendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SendButtonActionPerformed
-        if (Sender.file != null) {
+        if (Sender.raf != null) {
             Sender.protocol = ChooseProtocol.getSelectedItem().toString();
             textArea.append(Sender.protocol+" protocol chosen\n");
             Sender.sendProtocol();
@@ -193,7 +193,6 @@ public class SenderGUI extends javax.swing.JFrame {
             if (Sender.protocol.equals("TCP")) {
                 SenderTCP sender = new SenderTCP();
             } else {
-                //System.out.println("this is not implemented yet");
                 SenderRBUDP sender = new SenderRBUDP();
             }
             

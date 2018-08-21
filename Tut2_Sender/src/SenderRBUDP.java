@@ -37,19 +37,13 @@ public class SenderRBUDP {
             filesize = (int) Sender.file.length();
             numpackets = (filesize / PACKET_SIZE) + 1;
             
-            //sendBuffer = "Hello, World!".getBytes();
             fileAsBytes = new byte[filesize];
             fis = new FileInputStream(Sender.file);
             fis.read(fileAsBytes);
 
             address = InetAddress.getByName(Sender.ipAddress);
             socket = new DatagramSocket();
-            //packet = new DatagramPacket(sendBuffer, sendBuffer.length, address, port);
-            //socket.send(packet);
-            //System.out.println("packet sent succesfully");
-//            while(true){
-//                socket.send(packet);
-//            }
+            
             Sender.out.writeUTF(Sender.file.getName());
             Sender.out.writeInt((int) Sender.file.length());
 
@@ -59,7 +53,6 @@ public class SenderRBUDP {
             sendPackets();
 
         } catch (Exception e) {
-            //System.err.println("could not make RBUDP socket : " + e);
             Logger.getLogger(SenderRBUDP.class.getName()).log(Level.SEVERE, null, e);
         }
 
@@ -71,8 +64,7 @@ public class SenderRBUDP {
         System.out.println("numpackets : " + numpackets);
 
         for (int i = 0; i < numpackets - 1; i++) {
-            //System.out.println("ITERATION : " + i+" ");
-            //sendBuffer = Arrays.copyOfRange(fileAsBytes, i * PACKET_SIZE, (i + 1) * PACKET_SIZE);
+            
             System.arraycopy(fileAsBytes, i * PACKET_SIZE, sendBuffer, 0, PACKET_SIZE);
             byte[] tempBuffer = new byte[PACKET_SIZE + 4];
             byte[] sequence = toBytes(i);
@@ -80,22 +72,17 @@ public class SenderRBUDP {
             System.arraycopy(sendBuffer, 0, tempBuffer, 4, sendBuffer.length);
 
             DatagramPacket tempPacket = new DatagramPacket(tempBuffer, tempBuffer.length, address, port);
-            //DatagramPacket tempPacket = new DatagramPacket(sendBuffer, sendBuffer.length, address, port);
             packetList.add(tempPacket);
         }
 
-        //System.out.println("bjkhbjbhjbh");
         sendBuffer = Arrays.copyOfRange(fileAsBytes, (numpackets - 1) * PACKET_SIZE, filesize);
 
-        //System.out.println("herro");
         byte[] tempBuffer = new byte[PACKET_SIZE + 4];
-        //BigInteger I = BigInteger.valueOf(numpackets-1);
         byte[] sequence = toBytes(numpackets - 1);//I.toByteArray();
         System.arraycopy(sequence, 0, tempBuffer, 0, 4);
         System.arraycopy(sendBuffer, 0, tempBuffer, 4, sendBuffer.length);
 
         DatagramPacket tempPacket = new DatagramPacket(tempBuffer, tempBuffer.length, address, port);
-        //DatagramPacket tempPacket = new DatagramPacket(sendBuffer, sendBuffer.length, address, port);
         packetList.add(tempPacket);
 
     }
@@ -111,7 +98,7 @@ public class SenderRBUDP {
         return result;
     }
 
-    public void sendPackets(/*ArrayList<DatagramPacket> tempPacketList*/) { //make this recursive w/ arguments being packets to send
+    public void sendPackets() {
 
         for (DatagramPacket dp : packetList) {
             try {
@@ -124,21 +111,6 @@ public class SenderRBUDP {
                 Logger.getLogger(SenderRBUDP.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
-//        try {
-//            byte[] bb = {-1, -1, -1, -1};
-//
-//            byte[] tempBuffer = new byte[PACKET_SIZE + 4];
-//            System.arraycopy(bb, 0, tempBuffer, 0, 4);
-//            DatagramPacket tempDP = new DatagramPacket(tempBuffer, tempBuffer.length, address, port);
-//            
-//            for (int i = 0; i < 100; i++) {
-//                socket.send(tempDP);
-//            }
-//            
-//        } catch (Exception e) {
-//            System.err.println("could not say stop : " + e);
-//        }
 
         try {
             String receivedPacketNums = Sender.in.readUTF();
@@ -158,7 +130,6 @@ public class SenderRBUDP {
             System.err.println("could not get list of missing packets : " + e);
         }
 
-        //System.out.println("sending finished");
     }
 
     public int convertByteToInt(byte[] b) {

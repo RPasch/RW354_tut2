@@ -5,13 +5,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Sender {
     public static String ipAddress = "";
-    public static File file = null;
+    //public static File file = null;
+    public static RandomAccessFile raf = null;
+    public static String filename = "";
+    public static int filelength = 0;
+    //
     public static String protocol = "";
     public static Socket socket = null;
     static OutputStream outToReceiver;
@@ -43,9 +48,6 @@ public class Sender {
     public static void sendProtocol() {
         try {
             out.writeUTF(protocol);
-            //initOutToServer.close();
-            //initOut.close();
-            //initialSocket.close();
         } catch (IOException ex) {
             System.err.println("could not send protocol");
         }
