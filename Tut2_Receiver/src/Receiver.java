@@ -56,15 +56,6 @@ public class Receiver {
         } catch (Exception ex) {
             System.err.println("in getTypeOfMsg : " + ex);
         }
-         
-        try {
-           // in.close();
-            //inFromClient.close();
-           // normalClientSocket.close();
-            //normalServerSocket.close();
-        } catch (Exception ex) {
-            System.err.println("Closing Initial thingies : " + ex);
-        }
             
         if(code.equals("TCP")){
             ReceiverGUI.updateTextArea("TCP chosen");
@@ -75,14 +66,11 @@ public class Receiver {
             CallRBUDP();
         }
         
-        
     }
     
     
    public static void CallTCP() throws IOException, ClassNotFoundException{
-       
        ReceiverTCP tcp = new ReceiverTCP();
-   
    }
    
    

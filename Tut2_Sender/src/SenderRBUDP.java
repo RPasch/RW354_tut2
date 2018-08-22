@@ -1,4 +1,5 @@
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,26 +27,32 @@ public class SenderRBUDP {
     private byte[] fileAsBytes;
     FileInputStream fis;
     int filesize = 0, numpackets;
-    int PACKET_SIZE = 16384;
+    int PACKET_SIZE = 64000;
 
     public SenderRBUDP() {
+        Sender.file = new File(Sender.path);
+        try {
+            Sender.raf.close();
+        } catch (IOException ex) {
+            Logger.getLogger(SenderRBUDP.class.getName()).log(Level.SEVERE, null, ex);
+        }
         send();
     }
 
     public void send() {
         try {
-//            filesize = (int) Sender.file.length();
+            filesize = Sender.filelength;
             numpackets = (filesize / PACKET_SIZE) + 1;
             
             fileAsBytes = new byte[filesize];
-//            fis = new FileInputStream(Sender.file);
+            fis = new FileInputStream(Sender.file);
             fis.read(fileAsBytes);
 
             address = InetAddress.getByName(Sender.ipAddress);
             socket = new DatagramSocket();
             
-//            Sender.out.writeUTF(Sender.file.getName());
-//            Sender.out.writeInt((int) Sender.file.length());
+            Sender.out.writeUTF(Sender.filename);
+            Sender.out.writeInt(filesize);
 
             breakUpFile();
 

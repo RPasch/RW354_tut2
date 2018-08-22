@@ -40,70 +40,31 @@ public class ReceiverTCP {
         File file = new File(cwd+"/"+filename);
         
         System.out.println(filename + " | " + FILE_SIZE + " | " + numFileParts + " | " + Receiver.filePartSize);
-//        int bytesRead=0;
-//        int current = 0;
-//        FileOutputStream fos = null;
-//        BufferedOutputStream bos = null;
         
         try {
             int tempCount = FILE_SIZE;
-            //int bytesRead=0;
-            //int current = 0;
             FileOutputStream fos = new FileOutputStream(file);
             BufferedOutputStream bos = new BufferedOutputStream(fos);
             
-            System.out.println("|||"+tempCount+"|||");
             for (int i = 0; i < numFileParts - 1; i++) {
-                System.out.println("----------"+i+"-----------");
-                //System.out.println("a");
                 byte[] byteArray = new byte[Receiver.filePartSize];
-                //System.out.println("b");
                 Receiver.in.readFully(byteArray, 0, byteArray.length);
-                //System.out.println("c");
                 bos.write(byteArray, 0, byteArray.length);
-                //System.out.println("d");
                 tempCount -= Receiver.filePartSize;
-                //System.out.println("e");
-                System.out.println("||"+tempCount+"||");
             }
-            
-            
-            
-            System.out.println("tempcount : " + tempCount);
             
             byte[] byteArray = new byte[tempCount];
             Receiver.in.readFully(byteArray, 0, byteArray.length);
             bos.write(byteArray, 0, byteArray.length);
             
-            //byte[] byteArray = new byte[FILE_SIZE];
-            
-            //Receiver.in.readFully(byteArray, 0, byteArray.length);
-            //current = bytesRead;
-
-            //bos.write(byteArray, 0, byteArray.length);
-            
-            //System.out.println("filename : " + file.getName());
             bos.flush();
-            //bos.close();
-            
             
         } catch (Exception e) {
-            //System.err.println("shit : "+e);
             Logger.getLogger(ReceiverRBUDP.class.getName()).log(Level.SEVERE, null, e);
         }
 
         ReceiverGUI.updateTextArea("Transfer Complete");
         
     }
-    
-//    private static receive() {
-//        
-//    }
-    
-    
-    
-    
-    
-    
     
 }

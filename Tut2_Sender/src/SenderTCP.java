@@ -23,16 +23,7 @@ public class SenderTCP {
             Sender.out.writeUTF(Sender.filename);
             Sender.out.writeInt(Sender.filelength);
             Sender.out.writeInt(Sender.numFileParts);
-            //byte[] byteArray = new byte[(int)Sender.filelength];
-//            byte[] byteArray = new byte[byteInterval];
-
             send();
-            //fis = new FileInputStream(Sender.file);
-            
-//            bis = new BufferedInputStream(fis);
-//            bis.read(byteArray, 0, byteArray.length);
-//            Sender.out.write(byteArray, 0, byteArray.length);
-//            Sender.out.flush();
         } catch (Exception e) {
             System.err.println("could not send via TCP : " + e);
         }
